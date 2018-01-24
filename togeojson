@@ -5,6 +5,7 @@ var tj = require('./'),
     concat = require('concat-stream'),
     fs = require('fs'),
     xmldom = new (require('xmldom').DOMParser)();
+    JSONStream = require('JSONStream');
 
 var filename = argv._[0] || '',
     filetype = (argv.f || 'kml');
@@ -18,8 +19,19 @@ if (!tj[filetype] || (process.stdin.isTTY && !argv._[0])) {
 
 (argv._.length ? fs.createReadStream(argv._[0]) : process.stdin).pipe(concat(convert));
 
-function convert(data) { process.stdout.write(
-    JSON.stringify(tj[filetype](xmldom.parseFromString(data.toString())), null, 4));
+function convert(data) {
+  var transformStream = JSONStream.stringifyObject();
+  var outputStream = fs.createWriteStream( __dirname + "/" + filename.replace(filetype, '') + "geojson" );
+  transformStream.pipe( outputStream );
+  var JSONData = tj[filetype](xmldom.parseFromString(data.toString()));
+  var keys = Object.keys(JSONData);
+  keys.forEach((key) => transformStream.write([key, JSONData[key]]));
+  transformStream.end();
+
+  outputStream.on(
+        "finish",
+        function handleFinish() {console.log("Done");}
+  );
 }
 
 function help() {

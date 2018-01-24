@@ -41,7 +41,7 @@ The output is a JavaScript object of GeoJSON data, same as `.kml` outputs.
 Install it into your path with `npm install -g @mapbox/togeojson`.
 
 ```
-~> togeojson file.kml > file.geojson
+~> togeojson file.kml
 ```
 
 ## Node.js
