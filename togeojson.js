@@ -203,7 +203,7 @@ var toGeoJSON = (function() {
             }
             function getPlacemark(root) {
                 var geomsAndTimes = getGeometry(root), i, properties = {},
-                    name = nodeVal(get1(root, 'name')),
+                    name = unescape(nodeVal(get1(root, 'name')).replace(/[<>]/g, '').replace(/U\+/g, '%u')),
                     address = nodeVal(get1(root, 'address')),
                     styleUrl = nodeVal(get1(root, 'styleUrl')),
                     description = nodeVal(get1(root, 'description')),
