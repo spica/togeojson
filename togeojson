@@ -21,7 +21,7 @@ if (!tj[filetype] || (process.stdin.isTTY && !argv._[0])) {
 
 function convert(data) {
   var transformStream = JSONStream.stringifyObject();
-  var outputStream = fs.createWriteStream( __dirname + "/" + filename.replace(filetype, '') + "geojson" );
+  var outputStream = fs.createWriteStream(filename.replace(filetype, '') + "geojson" );
   transformStream.pipe( outputStream );
   var JSONData = tj[filetype](xmldom.parseFromString(data.toString()));
   var keys = Object.keys(JSONData);
